@@ -1,3 +1,4 @@
+import { PostsService } from './posts/posts.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -49,7 +50,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatListModule,
     MatExpansionModule,
   ],
-  providers: [],
+  providers: [PostsService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
