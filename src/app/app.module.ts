@@ -1,4 +1,5 @@
 import { PostsService } from './posts/posts.service';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -49,6 +50,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatIconModule,
     MatListModule,
     MatExpansionModule,
+    HttpClientModule,
   ],
   providers: [PostsService],
   bootstrap: [AppComponent],
