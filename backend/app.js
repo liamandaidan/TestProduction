@@ -2,6 +2,10 @@ const express = require('express');
 const bodyparser = require('body-parser');
 const app = express();
 const postmodel = require('./models/post');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv').config();
+mongoose.connect(`mongodb+srv://${dotenv.parsed.USERNAME}:${dotenv.parsed.PASSWORD}@cluster0.g5tr3ds.mongodb.net/?retryWrites=true&w=majority`, { useNewUrlParser: true })
+  .then(() => { console.log('connected to db') }).catch(() => { console.log('Connection failed') });
 
 app.use(bodyparser.json());
 
@@ -18,32 +22,33 @@ app.use((req, res, next) => {
 app.post('/api/posts', (req, res, next) => {
   const post = new postmodel({ title: req.body.title, content: req.body.content });
   //console.log(post);
-  res.status(201).json({ message: 'Post added successfully' });
+  post.save().then(result => {
+    res.status(201).json({
+      message: 'Post added successfully',
+      postId: result._id
+    });
+  });
+
 })
 
 app.get('/api/posts', (req, res, next) => {
-  const posts = [
-    {
-      id: 'snkfkjkf',
-      title: 'First server-side post',
-      content: 'This is comming from the server'
-    },
-    {
-      id: 'gyrrshjhk',
-      title: 'Second server-side post',
-      content: 'This is commiing from the server'
-    },
-    {
-      id: 'mhsetghj',
-      title: 'Third server-side post',
-      content: 'This is comming from the server'
-    }
-  ];
-
-  res.status(200).json({
-    message: 'Posts Got successfully',
-    posts: posts
+  postmodel.find().then((resp) => {
+    // console.log(resp);
+    res.status(200).json({
+      message: 'Posts fetched successfully',
+      posts: resp
+    })
   });
+})
+
+app.delete('/api/posts/:id', (req, res, next) => {
+  postmodel.deleteOne({ _id: req.params.id }).then(result => {
+    console.log(result)
+    res.status(200).json({
+      message: "Post deleted!"
+    });
+  });
+
 })
 
 
