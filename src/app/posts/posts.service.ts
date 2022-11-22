@@ -27,6 +27,11 @@ export class PostsService {
       });
   }
 
+  getPost(id: string): Observable<any> {
+    // return { ...this.posts.find((p) => p.id === id) };
+    return this.http.get('http://localhost:3001/api/posts/' + id);
+  }
+
   getPosts(): void {
     this.http
       .get<{ message: string; posts: any }>('http://localhost:3001/api/posts')
@@ -65,5 +70,16 @@ export class PostsService {
         //pass a copied ref
         this.postUpdated.next([...this.posts]);
       });
+  }
+
+  updatePost(postId: string, title: string, content: string) {
+    const post: Post = { id: postId, title: title, content: content };
+
+    this.http
+      .put<{ message: string }>(
+        'http://localhost:3001/api/posts/' + postId,
+        post
+      )
+      .subscribe((resp) => console.log(resp));
   }
 }
